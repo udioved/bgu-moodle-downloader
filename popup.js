@@ -1,7 +1,7 @@
 const toggle = document.getElementById('toggle');
 const status = document.getElementById('status');
-const downloadSection = document.getElementById('downloadSection');
 const downloadBtn = document.getElementById('downloadBtn');
+const downloadText = document.getElementById('downloadText');
 const downloadStatus = document.getElementById('downloadStatus');
 
 const STORAGE_KEY = 'extensionEnabled';
@@ -29,13 +29,20 @@ async function checkVideoPage() {
         const response = await chrome.tabs.sendMessage(tab.id, { action: 'getVideoInfo' });
         if (response?.isVideoPage && response.videoUrl) {
             currentVideoUrl = response.videoUrl;
-            downloadSection.style.display = 'block';
+            downloadBtn.classList.remove('disabled');
+            downloadBtn.disabled = false;
+            downloadText.textContent = 'Download This Video';
         } else {
             currentVideoUrl = null;
-            downloadSection.style.display = 'none';
+            downloadBtn.classList.add('disabled');
+            downloadBtn.disabled = true;
+            downloadText.textContent = 'Not on video page';
         }
     } catch (e) {
-        downloadSection.style.display = 'none';
+        currentVideoUrl = null;
+        downloadBtn.classList.add('disabled');
+        downloadBtn.disabled = true;
+        downloadText.textContent = 'Not on video page';
     }
 }
 
@@ -55,7 +62,7 @@ downloadBtn.addEventListener('click', () => {
     if (!currentVideoUrl) return;
 
     downloadBtn.disabled = true;
-    downloadBtn.textContent = 'Downloading...';
+    downloadText.textContent = 'Downloading...';
     downloadStatus.textContent = 'Starting download...';
 
     chrome.tabs.sendMessage(currentTabId, {
@@ -64,7 +71,7 @@ downloadBtn.addEventListener('click', () => {
     }, (response) => {
         if (chrome.runtime.lastError) {
             downloadBtn.disabled = false;
-            downloadBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg> Download This Video';
+            downloadText.textContent = 'Download This Video';
             downloadStatus.textContent = 'Error: ' + chrome.runtime.lastError.message;
             return;
         }
@@ -73,12 +80,12 @@ downloadBtn.addEventListener('click', () => {
             downloadStatus.textContent = 'Download started!';
             setTimeout(() => {
                 downloadBtn.disabled = false;
-                downloadBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg> Download This Video';
+                downloadText.textContent = 'Download This Video';
                 downloadStatus.textContent = '';
             }, 3000);
         } else {
             downloadBtn.disabled = false;
-            downloadBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg> Download This Video';
+            downloadText.textContent = 'Download This Video';
             downloadStatus.textContent = 'Download failed';
         }
     });
