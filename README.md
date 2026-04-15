@@ -31,19 +31,57 @@ When viewing a video on Moodle, a "Download Video" button appears below the play
 
 In the video list page, a "Download" button appears in each row.
 
-## How It Works
+## Technical Details
 
-1. **Content Script** (`content.js`): Injected into Moodle pages, scans for video links and adds download buttons
+### Architecture
 
-2. **Background Script** (`background.js`): Handles video fetching and downloading via Chrome's Downloads API
+The extension uses Chrome's Manifest V3 with the following components:
 
-3. **Popup** (`popup.html` + `popup.js`): Provides on/off toggle with instant state sync to all tabs
+1. **Content Script** (`content.js`)
+   - Injected into Moodle pages
+   - Scans for video links (`viewvideo.php` URLs and direct `.mp4` sources)
+   - Adds download buttons to video players and table rows
+   - Communicates with background script for downloads
 
-4. **Offscreen Document** (`offscreen.html` + `offscreen.js`): Creates blob URLs for video downloads
+2. **Background Script** (`background.js`)
+   - Service worker handling video fetching
+   - Uses Chrome Downloads API
+   - Implements caching via Cache API for large files
+   - Fetches videos with proper Referer headers to bypass server restrictions
 
-The extension fetches videos through the background script using proper Referer headers to bypass access restrictions, then saves them to your default download folder.
+3. **Popup** (`popup.html` + `popup.js`)
+   - On/off toggle UI
+   - Instant state sync via Chrome Storage API
+   - Broadcasts state changes to all content scripts
 
-## Files
+4. **Offscreen Document** (`offscreen.html` + `offscreen.js`)
+   - Creates blob URLs from cached video data
+   - Required for Manifest V3 downloads
+
+5. **Network Rules** (`rules.json`)
+   - Uses declarativeNetRequest to modify Referer headers
+   - Allows video fetches from cloudfront.net
+
+### How Downloads Work
+
+1. User clicks download button
+2. Content script extracts video URL from `<video>` element or `<source>` tags
+3. Background script fetches video with `Referer: https://moodle.bgu.ac.il/`
+4. Video is cached in browser Cache API
+5. Offscreen document creates a blob URL
+6. Chrome Downloads API saves the file
+
+### Technologies Used
+
+- **Chrome Extensions API** (Manifest V3)
+- **Chrome Downloads API** - File saving
+- **Cache API** - Video caching
+- **Offscreen Documents** - Blob URL creation
+- **declarativeNetRequest** - Header modification
+- **Chrome Storage API** - State persistence
+- **Web Navigation API** - Tab communication
+
+### Files
 
 - `manifest.json` - Extension configuration
 - `content.js` - Page injection script
