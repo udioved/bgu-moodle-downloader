@@ -12,10 +12,15 @@ Chrome extension for downloading lecture videos from Moodle BGU.
 
 ## Installation
 
-1. Open Chrome and go to `chrome://extensions/`
-2. Enable "Developer mode" (top right)
-3. Click "Load unpacked"
-4. Select the extension folder
+### From Chrome Web Store (Recommended)
+Search for "Moodle Video Downloader" in the Chrome Web Store and click "Add to Chrome".
+
+### Manual Installation (Developer)
+1. Download the extension from GitHub releases
+2. Open Chrome and go to `chrome://extensions/`
+3. Enable "Developer mode" (top right)
+4. Click "Load unpacked"
+5. Select the extension folder
 
 ## Usage
 
