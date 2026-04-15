@@ -135,6 +135,46 @@
             color: #999;
             margin-top: 8px;
         }
+        .download-section {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .download-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #F28C20;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .download-btn:hover {
+            background: #D97A1A;
+        }
+        .download-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .download-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        .download-status {
+            margin-top: 8px;
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -151,6 +191,13 @@
                 <input type="checkbox" id="toggle">
                 <span class="slider"></span>
             </label>
+        </div>
+        <div class="download-section" id="downloadSection" style="display: none;">
+            <button class="download-btn" id="downloadBtn">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                Download This Video
+            </button>
+            <div class="download-status" id="downloadStatus"></div>
         </div>
         <div class="status" id="status">Extension is active</div>
         <div class="divider"></div>
