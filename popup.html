@@ -4,62 +4,71 @@
     <meta charset="UTF-8">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --accent: #22c55e;
+            --text: #fff;
+            --muted: #888;
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-width: 280px;
         }
-        .container {
-            padding: 20px;
+        
+        .container { padding: 16px; }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
         }
+        
         .header {
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 16px;
         }
+        
         .icon {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #F28C20 0%, #D97A1A 100%);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
         }
-        .icon svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
+        .icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
         }
-        .title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
+        
+        .title-wrap { flex: 1; display: flex; flex-direction: column; }
+        .title { font-size: 16px; font-weight: 600; }
+        .subtitle { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        
         .toggle-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 16px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
         }
-        .toggle-label {
-            font-size: 14px;
-            color: #333;
-        }
+        .toggle-label { font-size: 13px; }
+        .toggle-status { font-size: 10px; color: var(--muted); margin-top: 2px; }
+        
         .switch {
             position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
+            width: 42px;
+            height: 22px;
         }
         .switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
+        
         .slider {
             position: absolute;
             cursor: pointer;
@@ -67,149 +76,111 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #e0e0e0;
-            transition: 0.25s;
-            border-radius: 24px;
+            background: #444;
+            border-radius: 22px;
+            transition: 0.2s;
         }
         .slider:before {
             position: absolute;
             content: "";
             height: 18px;
             width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.25s;
+            left: 2px;
+            bottom: 2px;
+            background: #888;
             border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: 0.2s;
         }
-        input:checked + .slider {
-            background-color: #4CAF50;
-        }
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-        .status {
-            font-size: 12px;
-            color: #666;
-            margin-top: 8px;
-            text-align: center;
-        }
-        .divider {
-            height: 1px;
-            background: #eee;
-            margin: 16px 0;
-        }
-        .footer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .github-link {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-decoration: none;
-            color: #666;
-            font-size: 12px;
-            transition: color 0.2s;
-        }
-        .github-link:hover {
-            color: #333;
-        }
-        .github-icon {
-            width: 16px;
-            height: 16px;
-        }
-        .github-icon svg {
-            width: 100%;
-            height: 100%;
-            fill: currentColor;
-        }
-        .created-by {
-            display: block;
-            text-align: center;
-            font-size: 11px;
-            color: #999;
-            margin-top: 8px;
-        }
-        .download-section {
-            margin-top: 16px;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
+
+        .switch input:checked + .slider { background: #22c55e; }
+        .switch input:checked + .slider:before { transform: translateX(20px); }
+        
         .download-btn {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 10px 16px;
-            background: #F28C20;
-            color: white;
+            padding: 12px;
+            background: #333;
+            color: #555;
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 13px;
             font-weight: 500;
+            cursor: default;
+        }
+        .download-btn:not(:disabled):not(.disabled) {
+            background: #f28c20;
+            color: #fff;
             cursor: pointer;
-            transition: background 0.2s, opacity 0.2s;
-        }
-        .download-btn:hover {
-            background: #D97A1A;
-        }
-        .download-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            opacity: 0.7;
-        }
-        .download-btn.disabled {
-            background: #bbb;
-            color: #888;
-            cursor: not-allowed;
-        }
-        .download-btn.disabled:hover {
-            background: #bbb;
         }
         .download-btn svg {
             width: 18px;
             height: 18px;
             fill: currentColor;
         }
+        
         .download-status {
             margin-top: 8px;
-            font-size: 12px;
+            font-size: 11px;
             text-align: center;
-            color: #666;
+            color: var(--muted);
         }
+        
+        .footer {
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #2a2a2a;
+        }
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .github-link:hover { color: var(--text); }
+        .github-icon { width: 14px; height: 14px; }
+        .github-icon svg { fill: currentColor; }
+        .created-by { font-size: 10px; color: var(--muted); margin-top: 8px; }
+        .disclaimer { font-size: 9px; color: var(--muted); opacity: 0.7; margin-top: 4px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="icon">
-                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        <div class="card">
+            <div class="header">
+                <div class="icon">
+                    <img src="icon128.png" alt="icon">
+                </div>
+                <div class="title-wrap">
+                    <div class="title">Moodle Video Downloader</div>
+                    <div class="subtitle">v2.0</div>
+                </div>
             </div>
-            <span class="title">Moodle Video Downloader</span>
+            <div class="toggle-row">
+                <div>
+                    <div class="toggle-label">Enable extension</div>
+                    <div class="toggle-status" id="status">Active</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
-        <div class="toggle-row">
-            <span class="toggle-label">Enable extension</span>
-            <label class="switch">
-                <input type="checkbox" id="toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-        <div class="download-section">
+        
+        <div class="card">
             <button class="download-btn disabled" id="downloadBtn" disabled>
                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
                 <span id="downloadText">Not on video page</span>
             </button>
             <div class="download-status" id="downloadStatus"></div>
         </div>
-        <div class="status" id="status">Extension is active</div>
-        <div class="divider"></div>
+        
         <div class="footer">
             <a href="https://github.com/udioved/bgu-moodle-downloader" target="_blank" class="github-link">
                 <span class="github-icon">
@@ -217,8 +188,9 @@
                 </span>
                 GitHub
             </a>
+            <div class="created-by">Created by Udi Oved</div>
+            <div class="disclaimer">Not affiliated with BGU</div>
         </div>
-        <span class="created-by">created by royiro10 and udioved</span>
     </div>
     <script src="popup.js"></script>
 </body>

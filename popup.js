@@ -14,10 +14,10 @@ async function loadState() {
         const result = await chrome.storage.local.get(STORAGE_KEY);
         const isEnabled = result[STORAGE_KEY] !== false;
         toggle.checked = isEnabled;
-        status.textContent = isEnabled ? 'Extension is active' : 'Extension is disabled';
+        status.textContent = isEnabled ? 'Active' : 'Disabled';
     } catch (e) {
         toggle.checked = true;
-        status.textContent = 'Extension is active';
+        status.textContent = 'Active';
     }
 }
 
