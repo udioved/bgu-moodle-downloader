@@ -40,6 +40,55 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             removeButtons();
         }
     }
+
+    if (message.action === 'getVideoInfo') {
+        const videoPlayer = document.getElementById('my-player');
+        if (!videoPlayer) {
+            sendResponse({ isVideoPage: false });
+            return;
+        }
+
+        let videoUrl = null;
+        const sources = videoPlayer.querySelectorAll('source');
+        for (const source of sources) {
+            const src = source.getAttribute('src') || source.src;
+            if (isValidVideoUrl(src)) {
+                videoUrl = src;
+                break;
+            }
+        }
+        if (!videoUrl && videoPlayer.src && isValidVideoUrl(videoPlayer.src)) {
+            videoUrl = videoPlayer.src;
+        }
+
+        sendResponse({ isVideoPage: true, videoUrl: videoUrl });
+        return true;
+    }
+
+    if (message.action === 'downloadVideoFromPopup') {
+        if (!enabled) {
+            sendResponse({ success: false, error: 'Extension disabled' });
+            return true;
+        }
+
+        const videoUrl = message.videoUrl;
+        if (!videoUrl) {
+            sendResponse({ success: false, error: 'No video URL' });
+            return true;
+        }
+
+        chrome.runtime.sendMessage({
+            action: 'downloadVideo',
+            videoUrl: videoUrl
+        }, (response) => {
+            if (chrome.runtime.lastError) {
+                sendResponse({ success: false, error: chrome.runtime.lastError.message });
+                return;
+            }
+            sendResponse(response || { success: false });
+        });
+        return true;
+    }
 });
 
 function getVideoLinks() {
