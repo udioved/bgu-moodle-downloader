@@ -3,6 +3,9 @@
   "name": "Moodle Video Downloader",
   "version": "2.0",
   "description": "Download lecture videos from Moodle BGU",
+  "icons": {
+    "128": "icon.svg"
+  },
   "permissions": ["downloads", "declarativeNetRequest", "offscreen", "storage"],
   "host_permissions": ["*://moodle.bgu.ac.il/*", "*://*.cloudfront.net/*"],
   "declarative_net_request": {
