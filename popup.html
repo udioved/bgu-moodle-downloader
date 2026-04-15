@@ -155,7 +155,7 @@
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.2s, opacity 0.2s;
         }
         .download-btn:hover {
             background: #D97A1A;
@@ -163,6 +163,15 @@
         .download-btn:disabled {
             background: #ccc;
             cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .download-btn.disabled {
+            background: #bbb;
+            color: #888;
+            cursor: not-allowed;
+        }
+        .download-btn.disabled:hover {
+            background: #bbb;
         }
         .download-btn svg {
             width: 18px;
@@ -192,10 +201,10 @@
                 <span class="slider"></span>
             </label>
         </div>
-        <div class="download-section" id="downloadSection" style="display: none;">
-            <button class="download-btn" id="downloadBtn">
+        <div class="download-section">
+            <button class="download-btn disabled" id="downloadBtn" disabled>
                 <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-                Download This Video
+                <span id="downloadText">Not on video page</span>
             </button>
             <div class="download-status" id="downloadStatus"></div>
         </div>
