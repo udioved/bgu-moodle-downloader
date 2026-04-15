@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --bg: #121212;
+            --card: #1e1e1e;
+            --accent: #22c55e;
+            --text: #fff;
+            --muted: #888;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-width: 280px;
+        }
+        
+        .container { padding: 16px; }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+        }
+        .icon img {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+        
+        .title-wrap { flex: 1; display: flex; flex-direction: column; }
+        .title { font-size: 16px; font-weight: 600; }
+        .subtitle { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .toggle-label { font-size: 13px; }
+        .toggle-status { font-size: 10px; color: var(--muted); margin-top: 2px; }
+        
+        .switch {
+            position: relative;
+            width: 42px;
+            height: 22px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #444;
+            border-radius: 22px;
+            transition: 0.2s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background: #888;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        .switch input:checked + .slider { background: #22c55e; }
+        .switch input:checked + .slider:before { transform: translateX(20px); }
+        
+        .download-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background: #333;
+            color: #555;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: default;
+        }
+        .download-btn:not(:disabled):not(.disabled) {
+            background: #f28c20;
+            color: #fff;
+            cursor: pointer;
+        }
+        .download-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        
+        .download-status {
+            margin-top: 8px;
+            font-size: 11px;
+            text-align: center;
+            color: var(--muted);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #2a2a2a;
+        }
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 11px;
+        }
+        .github-link:hover { color: var(--text); }
+        .github-icon { width: 14px; height: 14px; }
+        .github-icon svg { fill: currentColor; }
+        .created-by { font-size: 10px; color: var(--muted); margin-top: 8px; }
+        .disclaimer { font-size: 9px; color: var(--muted); opacity: 0.7; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="icon">
+                    <img src="icon128.png" alt="icon">
+                </div>
+                <div class="title-wrap">
+                    <div class="title">Moodle Video Downloader</div>
+                    <div class="subtitle">v2.0</div>
+                </div>
+            </div>
+            <div class="toggle-row">
+                <div>
+                    <div class="toggle-label">Enable extension</div>
+                    <div class="toggle-status" id="status">Active</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="card">
+            <button class="download-btn disabled" id="downloadBtn" disabled>
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                <span id="downloadText">Not on video page</span>
+            </button>
+            <div class="download-status" id="downloadStatus"></div>
+        </div>
+        
+        <div class="footer">
+            <a href="https://github.com/udioved/bgu-moodle-downloader" target="_blank" class="github-link">
+                <span class="github-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                </span>
+                GitHub
+            </a>
+            <div class="created-by">Created by Udi Oved</div>
+            <div class="disclaimer">Not affiliated with BGU</div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
